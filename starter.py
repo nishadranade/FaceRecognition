@@ -28,7 +28,7 @@ def load_dataset():
     return train_loader
 
 data_loader = load_dataset()
-print(len(data_loader))
+# print(len(data_loader))
 for image, label in data_loader:
     print(image.size())
-    print(label)
+    print(len(label))
