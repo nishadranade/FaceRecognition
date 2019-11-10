@@ -2,6 +2,7 @@ from PIL import Image
 import numpy as np 
 import glob 
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 
 def build_dataset():
     org_dataset = []
@@ -50,7 +51,7 @@ def pca(eig_values, eig_vectors, k):
 eigen_faces = pca(eig_values, eig_vectors, num_components)
 
 # print(type(eigen_faces))
-# print(eigen_faces.shape)
+print(eigen_faces.shape)
 
 def reconstruct_faces(eigen_faces, mean_vector):
     org_dim_eig_faces = []
@@ -64,6 +65,38 @@ def reconstruct_faces(eigen_faces, mean_vector):
 orig_dim_eig_faces = reconstruct_faces(eigen_faces, mean_vector)
 
 # %matplotlib inline
-plt.plot(eig_values[:10])
-plt.show()
-plt.clf()
+# plt.plot(eig_values[:10])
+# plt.show()
+# plt.clf()
+
+def findK(eig_values):
+    total_energy = np.trapz(eig_values, dx=1)
+    print("Total Energy:", total_energy)
+
+    k = 0
+    while True:
+        k_energy = np.trapz(eig_values[:k], dx=1)
+        print("Energy captured by", k, "components:", k_energy)
+        if k_energy >= 0.6*total_energy:
+            break
+        k += 1
+
+    print("Number of components to capture 60% energy:", k)
+
+# findK(eig_values)
+
+def plot_top10(orig_dim_eig_faces):
+    gs = gridspec.GridSpec(2, 5, top=1., bottom=0., right=1., left=0., hspace=0., wspace=0.)
+
+    i = 0
+    for g in gs:
+        ax = plt.subplot(g)
+        ax.imshow(orig_dim_eig_faces[i], cmap=plt.get_cmap('gray'))
+        ax.set_xticks([])
+        ax.set_yticks([])
+        i += 1
+    
+    plt.show()
+    plt.clf()
+
+plot_top10(orig_dim_eig_faces)

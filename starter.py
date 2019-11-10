@@ -32,3 +32,4 @@ data_loader = load_dataset()
 for image, label in data_loader:
     print(image.size())
     print(len(label))
+    print(image[0][2][0][0])
