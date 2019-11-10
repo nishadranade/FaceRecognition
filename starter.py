@@ -14,7 +14,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 def load_dataset():
-    data_path = 'yaleFaces/data'
+    data_path = 'yaleFaces/data/test/'
     train_dataset = datasets.ImageFolder(
         root=data_path,
         transform=transforms.ToTensor()
@@ -28,5 +28,7 @@ def load_dataset():
     return train_loader
 
 data_loader = load_dataset()
+print(len(data_loader))
 for image, label in data_loader:
-    print(type(image))
+    print(image.size())
+    print(label)
