@@ -24,7 +24,7 @@ def load_dataset():
     )
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
-        batch_size=45,
+        batch_size=135,
         num_workers=0,
         shuffle=False
     )
@@ -46,7 +46,7 @@ print(images.size())
 
 images = images[:,0]
 
-images = images.reshape(45, 1, 243, 320)
+images = images.reshape(135, 1, 243, 320)
 
 print(images.size())
 print(labels.size())
@@ -58,20 +58,20 @@ class autoencoder(nn.Module):
     def __init__(self):
         super(autoencoder, self).__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(243*320, 1000),
+            nn.Linear(243*320, 5000),
             nn.ReLU(True),
-            nn.Linear(1000, 100),
+            nn.Linear(5000, 1000),
             nn.ReLU(True), 
-            nn.Linear(100, 10))
+            nn.Linear(1000, 100))
             # nn.ReLU(True), 
             # nn.Linear(12, 3))
         self.decoder = nn.Sequential(
-            nn.Linear(10, 100),
-            nn.ReLU(True),
             nn.Linear(100, 1000),
             nn.ReLU(True),
-            nn.Linear(1000, 243*320),
-            nn.Tanh())
+            nn.Linear(1000, 5000),
+            nn.ReLU(True),
+            nn.Linear(5000, 243*320))
+            # nn.Tanh())
             # nn.ReLU(True), nn.Linear(128, 28 * 28), nn.Tanh()
     def forward(self, x):
         x = self.encoder(x)
@@ -102,25 +102,20 @@ for img in images:
     loss.backward()
     optimizer.step()
     i += 1
-    if i == 15:
-        pic =output.cpu().data
-        print("output size= " + str(pic.size()))
-        pic = pic.reshape(243, 320)
-        save_image(pic, './decode15.png')   
-    if i == 44:
-        pic =output.cpu().data
-        print("output size= " + str(pic.size()))
-        pic = pic.reshape(243, 320)
-        save_image(pic, './decode44.png')
-    if i == 43:
-        pic =output.cpu().data
-        print("output size= " + str(pic.size()))
-        pic = pic.reshape(243, 320)
-        save_image(pic, './decode43.png') 
-    if i == 45:
-        pic =output.cpu().data
-        print("output size= " + str(pic.size()))
-        pic = pic.reshape(243, 320)
-        save_image(pic, './decode45.png')
-
+    # pic =output.cpu().data
+    # print("output size= " + str(pic.size()))
+    # pic = pic.reshape(243, 320)
+    # save_image(pic, './decoded/decode' +str(i) + '.png')   
+    
+i = 0
 # torch.save(model.state_dict(), './trial_autoenc.pth')
+for img in images:
+    img = img.view(img.size(0), -1)
+    img = Variable(img).cpu()
+    # ==== forward ========
+    output = model(img)
+    i +=1 
+    pic =output.cpu().data
+    print("output size= " + str(pic.size()))
+    pic = pic.reshape(243, 320)
+    save_image(pic, './results5000/decode' +str(i) + '.png')   
