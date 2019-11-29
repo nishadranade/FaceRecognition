@@ -9,6 +9,7 @@ import matplotlib.image as mpimg
 from torch.utils.data import Dataset, DataLoader
 from torch.autograd import Variable
 from torchvision import transforms, utils, datasets
+from torchvision.utils import save_image
 from torch import nn
 
 #ignore warnings
@@ -23,7 +24,7 @@ def load_dataset():
     )
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
-        batch_size=135,
+        batch_size=45,
         num_workers=0,
         shuffle=False
     )
@@ -40,10 +41,12 @@ for i, l in data_loader:
     images = i
     labels = l
 
-print(type(images))
-print(type(labels))
+print(images.size())
+# print(type(labels))
 
 images = images[:,0]
+
+images = images.reshape(45, 1, 243, 320)
 
 print(images.size())
 print(labels.size())
@@ -55,20 +58,20 @@ class autoencoder(nn.Module):
     def __init__(self):
         super(autoencoder, self).__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(243*320, 5000),
+            nn.Linear(243*320, 1000),
             nn.ReLU(True),
-            nn.Linear(5000, 500),
+            nn.Linear(1000, 100),
             nn.ReLU(True), 
-            nn.Linear(500, 10))
+            nn.Linear(100, 10))
             # nn.ReLU(True), 
             # nn.Linear(12, 3))
         self.decoder = nn.Sequential(
-            nn.Linear(10, 500),
+            nn.Linear(10, 100),
             nn.ReLU(True),
-            nn.Linear(500, 5000),
+            nn.Linear(100, 1000),
             nn.ReLU(True),
-            nn.Linear(5000, 243*320))#,
-            # nn.Tanh())
+            nn.Linear(1000, 243*320),
+            nn.Tanh())
             # nn.ReLU(True), nn.Linear(128, 28 * 28), nn.Tanh()
     def forward(self, x):
         x = self.encoder(x)
@@ -86,12 +89,10 @@ criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
     model.parameters(), lr = 1e-3, weight_decay=1e-5)
 
+i = 0
 
-img1 = images.view(images.size(0), -1)
-
-print(img1.size())
 for img in images:
-    # img = img.view(img.size(0), -1)
+    img = img.view(img.size(0), -1)
     img = Variable(img).cpu()
     # ===== forward ==========
     output = model(img)
@@ -100,5 +101,26 @@ for img in images:
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
+    i += 1
+    if i == 15:
+        pic =output.cpu().data
+        print("output size= " + str(pic.size()))
+        pic = pic.reshape(243, 320)
+        save_image(pic, './decode15.png')   
+    if i == 44:
+        pic =output.cpu().data
+        print("output size= " + str(pic.size()))
+        pic = pic.reshape(243, 320)
+        save_image(pic, './decode44.png')
+    if i == 43:
+        pic =output.cpu().data
+        print("output size= " + str(pic.size()))
+        pic = pic.reshape(243, 320)
+        save_image(pic, './decode43.png') 
+    if i == 45:
+        pic =output.cpu().data
+        print("output size= " + str(pic.size()))
+        pic = pic.reshape(243, 320)
+        save_image(pic, './decode45.png')
 
-
+# torch.save(model.state_dict(), './trial_autoenc.pth')
