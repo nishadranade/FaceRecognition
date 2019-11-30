@@ -120,7 +120,7 @@ criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
     model.parameters(), lr = 1e-3, weight_decay=1e-10)
 
-for e in range(100):
+for e in range(25):
     i = 0
     losses = []
     for img in images:
