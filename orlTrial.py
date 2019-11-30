@@ -78,10 +78,13 @@ class autoencoder(nn.Module):
         self.encoder = nn.Sequential(
             nn.Linear(112*92, 2000),
             nn.ReLU(True),
+            nn.BatchNorm1d(2000),
             nn.Linear(2000, 1000),
             nn.ReLU(True),
+            nn.BatchNorm1d(1000),
             nn.Linear(1000, 500),
             nn.ReLU(True), 
+            nn.BatchNorm1d(500),
             nn.Linear(500, 100),
             nn.ReLU(True), 
             nn.Linear(100, 32))
@@ -91,8 +94,10 @@ class autoencoder(nn.Module):
             nn.Linear(100, 500),
             nn.ReLU(True),
             nn.Linear(500, 1000),
+            nn.BatchNorm1d(1000),
             nn.ReLU(True),
             nn.Linear(1000, 2000),
+            nn.BatchNorm1d(2000),
             nn.ReLU(True),
             nn.Linear(2000, 112*92),
             nn.Tanh())
