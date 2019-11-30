@@ -76,30 +76,30 @@ class autoencoder(nn.Module):
     def __init__(self):
         super(autoencoder, self).__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(112*92, 2000),
+            nn.Linear(112*92, 20000),
             nn.ReLU(True),
             #nn.BatchNorm1d(2000),
-            nn.Linear(2000, 1000),
+            nn.Linear(20000, 5000),
             nn.ReLU(True),
             #nn.BatchNorm1d(1000),
-            nn.Linear(1000, 500),
+            nn.Linear(5000, 1000),
             nn.ReLU(True), 
             #nn.BatchNorm1d(500),
-            nn.Linear(500, 100),
+            nn.Linear(1000, 200),
             nn.ReLU(True), 
-            nn.Linear(100, 32))
+            nn.Linear(200, 50))
         self.decoder = nn.Sequential(
-            nn.Linear(32, 100),
+            nn.Linear(50, 200),
             nn.ReLU(True),
-            nn.Linear(100, 500),
+            nn.Linear(200, 1000),
             nn.ReLU(True),
-            nn.Linear(500, 1000),
+            nn.Linear(1000, 5000),
             #nn.BatchNorm1d(1000),
             nn.ReLU(True),
-            nn.Linear(1000, 2000),
+            nn.Linear(5000, 20000),
             #nn.BatchNorm1d(2000),
             nn.ReLU(True),
-            nn.Linear(2000, 112*92),
+            nn.Linear(20000, 112*92),
             nn.Tanh())
             # nn.ReLU(True), nn.Linear(128, 28 * 28), nn.Tanh()
     def forward(self, x, store):
@@ -123,7 +123,7 @@ optimizer = torch.optim.Adam(
 
 
 # store = []
-for e in range(1):
+for e in range(10):
     i = 0
     losses = []
     store = []
@@ -190,7 +190,7 @@ for img in images:
     output = model(img, store)
     encoding = store[-1]
     pic2 = encoding.cpu().data
-    pic2 = pic2.reshape(8, 4)
+    pic2 = pic2.reshape(10, 5)
     save_image(pic2, './resultsOrl/encodings/encode' +str(i) + '.png')
     loss = criterion(output, img)
     print('loss post = ' + str(loss.item()))
