@@ -82,8 +82,6 @@ class autoencoder(nn.Module):
             nn.ReLU(True),
             nn.Linear(1000, 500),
             nn.ReLU(True), 
-            nn.Linear(500, 500),
-            nn.Tanh(),
             nn.Linear(500, 100),
             nn.ReLU(True), 
             nn.Linear(100, 32))
@@ -92,8 +90,6 @@ class autoencoder(nn.Module):
             nn.ReLU(True),
             nn.Linear(100, 500),
             nn.ReLU(True),
-            nn.Linear(500, 500),
-            nn.Tanh(),
             nn.Linear(500, 1000),
             nn.ReLU(True),
             nn.Linear(1000, 2000),
@@ -117,9 +113,9 @@ class autoencoder(nn.Module):
 model = autoencoder().cpu()
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
-    model.parameters(), lr = 2e-4, weight_decay=1e-5)
+    model.parameters(), lr = 1e-3, weight_decay=1e-10)
 
-for e in range(20):
+for e in range(100):
     i = 0
     losses = []
     for img in images:
@@ -148,7 +144,8 @@ for e in range(20):
     print('avg loss is = ' + str(np.mean(losses)))    
 
 i = 0
-torch.save(model.state_dict(), './trial_autoenc.pth')
+#torch.save(model.state_dict(), './trial_autoenc.pth')
+
 for img in images:
     img = img.view(img.size(0), -1)
     img = Variable(img).cpu()
@@ -161,3 +158,4 @@ for img in images:
     # print("output size= " + str(pic.size()))
     pic = pic.reshape(112, 92)
     save_image(pic, './resultsOrl/post/decode' +str(i) + '.png')   
+
