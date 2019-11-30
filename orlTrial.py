@@ -181,13 +181,17 @@ print(str(np.linalg.norm(a04 - a14)))
 print(str(np.linalg.norm(a04 - a25)))
 print(str(np.linalg.norm(a04 - a24)))
 
+store = []
 
-sys.exit()
 for img in images:
     img = img.view(img.size(0), -1)
     img = Variable(img).cpu()
     # ==== forward ========
-    output = model(img)
+    output = model(img, store)
+    encoding = store[-1]
+    pic2 = encoding.detach().numpy()
+    pic2 = pic2.reshape(8, 4)
+    save_image(pic2, './resultsOrl/encodings/encode' +str(i) + '.png')
     loss = criterion(output, img)
     print('loss post = ' + str(loss.item()))
     i +=1 
