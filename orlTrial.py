@@ -102,8 +102,9 @@ class autoencoder(nn.Module):
             nn.Linear(2000, 112*92),
             nn.Tanh())
             # nn.ReLU(True), nn.Linear(128, 28 * 28), nn.Tanh()
-    def forward(self, x):
+    def forward(self, x, store):
         x = self.encoder(x)
+        store.append(x)
         x = self.decoder(x)
         return x
 
@@ -120,16 +121,19 @@ criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
     model.parameters(), lr = 1e-3, weight_decay=1e-10)
 
-for e in range(25):
+
+# store = []
+for e in range(5):
     i = 0
     losses = []
+    store = []
     for img in images:
         img = img.view(img.size(0), -1)
         # if i == 0:
         #     print('img size while training:'+ str(img.size()))
         img = Variable(img).cpu()
         # ===== forward ==========
-        output = model(img)
+        output = model(img, store)
         loss = criterion(output, img)
         losses.append(loss.item())
         # print('loss =' + str(loss.item()))
@@ -151,6 +155,34 @@ for e in range(25):
 i = 0
 #torch.save(model.state_dict(), './trial_autoenc.pth')
 
+#print(store)
+
+a04 = store[4].detach().numpy()
+a05 = store[5].detach().numpy()
+
+a14 = store[14].detach().numpy()
+a15 = store[15].detach().numpy()
+
+a24 = store[24].detach().numpy()
+a25 = store[25].detach().numpy()
+
+a34 = store[34].detach().numpy()
+a35 = store[35].detach().numpy()
+
+print('******* differences between same faces *******')
+print(str(np.linalg.norm(a04 - a05)))
+print(str(np.linalg.norm(a14 - a15)))
+print(str(np.linalg.norm(a24 - a25)))
+print(str(np.linalg.norm(a34 - a35)))
+
+print('***** differences between different faces ******')
+print(str(np.linalg.norm(a04 - a15)))
+print(str(np.linalg.norm(a04 - a14)))
+print(str(np.linalg.norm(a04 - a25)))
+print(str(np.linalg.norm(a04 - a24)))
+
+
+sys.exit()
 for img in images:
     img = img.view(img.size(0), -1)
     img = Variable(img).cpu()
