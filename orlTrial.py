@@ -123,7 +123,7 @@ optimizer = torch.optim.Adam(
 
 
 # store = []
-for e in range(5):
+for e in range(1):
     i = 0
     losses = []
     store = []
@@ -189,7 +189,7 @@ for img in images:
     # ==== forward ========
     output = model(img, store)
     encoding = store[-1]
-    pic2 = encoding.detach().numpy()
+    pic2 = encoding.cpu().data
     pic2 = pic2.reshape(8, 4)
     save_image(pic2, './resultsOrl/encodings/encode' +str(i) + '.png')
     loss = criterion(output, img)
