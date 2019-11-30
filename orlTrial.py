@@ -76,30 +76,30 @@ class autoencoder(nn.Module):
     def __init__(self):
         super(autoencoder, self).__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(112*92, 20000),
+            nn.Linear(112*92, 20000, bias=False),
             nn.ReLU(True),
             #nn.BatchNorm1d(2000),
-            nn.Linear(20000, 5000),
+            nn.Linear(20000, 5000, bias=False),
             nn.ReLU(True),
             #nn.BatchNorm1d(1000),
-            nn.Linear(5000, 1000),
+            nn.Linear(5000, 1000, bias=False),
             nn.ReLU(True), 
             #nn.BatchNorm1d(500),
-            nn.Linear(1000, 200),
+            nn.Linear(1000, 200, bias=False),
             nn.ReLU(True), 
-            nn.Linear(200, 50))
+            nn.Linear(200, 50, bias=False))
         self.decoder = nn.Sequential(
-            nn.Linear(50, 200),
+            nn.Linear(50, 200, bias=False),
             nn.ReLU(True),
-            nn.Linear(200, 1000),
+            nn.Linear(200, 1000, bias=False),
             nn.ReLU(True),
-            nn.Linear(1000, 5000),
+            nn.Linear(1000, 5000, bias=False),
             #nn.BatchNorm1d(1000),
             nn.ReLU(True),
-            nn.Linear(5000, 20000),
+            nn.Linear(5000, 20000, bias=False),
             #nn.BatchNorm1d(2000),
             nn.ReLU(True),
-            nn.Linear(20000, 112*92),
+            nn.Linear(20000, 112*92, bias=False),
             nn.Tanh())
             # nn.ReLU(True), nn.Linear(128, 28 * 28), nn.Tanh()
     def forward(self, x, store):
