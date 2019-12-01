@@ -39,32 +39,49 @@ class autoencoder(nn.Module):
     def __init__(self):
         super(autoencoder, self).__init__()
         self.encoder = nn.Sequential(
-            nn.Linear(112*92, 20000, bias=False),
+            nn.Linear(112*92, 7000, bias=True),
             nn.ReLU(True),
-            nn.Linear(20000, 5000, bias=False),
+            nn.Linear(7000, 4000, bias=True),
             nn.ReLU(True),
-            nn.Linear(5000, 1000, bias=False),
+            nn.Linear(4000, 2500, bias=True),
             nn.ReLU(True), 
-            nn.Linear(1000, 200, bias=False))
-            # nn.ReLU(True), 
+            nn.Linear(2500, 1500, bias=True))
+            # nn.ReLU(True)) 
             # nn.Linear(200, 50, bias=False))
         self.decoder = nn.Sequential(
             # nn.Linear(50, 200, bias=False),
             # nn.ReLU(True),
-            nn.Linear(200, 1000, bias=False),
+            nn.Linear(1500, 2500, bias=True),
             nn.ReLU(True),
-            nn.Linear(1000, 5000, bias=False),
+            nn.Linear(2500, 4000, bias=True),
             nn.ReLU(True),
-            nn.Linear(5000, 20000, bias=False),
+            nn.Linear(4000, 7000, bias=True),
             nn.ReLU(True),
-            nn.Linear(20000, 112*92, bias=False),
-            nn.Tanh())
+            nn.Linear(7000, 112*92, bias=True)
+            )
             # nn.ReLU(True), nn.Linear(128, 28 * 28), nn.Tanh()
     def forward(self, x, store):
         x = self.encoder(x)
         store.append(x)
         x = self.decoder(x)
         return x
+
+
+# class autoencoder(nn.Module):
+#     def __init__(self):
+#         super(autoencoder, self).__init__()
+#         self.encoder = nn.Sequential(
+#             nn.Linear(112*92, 1000, bias=True)
+#         )
+#         self.decoder = nn.Sequential(
+#             nn.Linear(1000, 112*92),
+#             nn.Tanh()
+#         )
+#     def forward(self, x, store):
+#         x = self.encoder(x)
+#         store.append(x)
+#         x = self.decoder(x)
+#         return x
 
 # img = images[100].numpy()
 # print(images[100].size())
@@ -81,7 +98,7 @@ optimizer = torch.optim.Adam(
 
 
 # store = []
-for e in range(10):
+for e in range(100):
     #i = 0
     #losses = []
     store = []
@@ -129,7 +146,7 @@ for img, _ in data_loader:
 
 
 
-garb = torch.zeros(1,1,112,92)
+garb = torch.rand(1,1,112,92)
 garb = garb.view(garb.size(0), -1)
 garb = model(garb, [])
 pic = garb.cpu().data
