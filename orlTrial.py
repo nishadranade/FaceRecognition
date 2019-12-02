@@ -100,7 +100,7 @@ optimizer = torch.optim.Adam(
 # store = []
 losses = []
 
-for e in range(1000):
+for e in range(1500):
     #i = 0
     store = []
     for img, _ in data_loader:              #img is now a batch
@@ -139,14 +139,12 @@ for e in range(1000):
 
 # ********************** new block ***************
 
-for img, _ in data_loader:
-    img = img[:, 0]
-    for i, p in enumerate(img):
-        p = p.reshape(112, 92)
-        save_image(p, './resultsOrl/orig/orig' +str(i) + '.png')  
-    break
-
-
+# for img, _ in data_loader:
+#     img = img[:, 0]
+#     for i, p in enumerate(img):
+#         p = p.reshape(112, 92)
+#         save_image(p, './resultsOrl/orig/orig' +str(i) + '.png')  
+#     break
 
 
 garb = torch.rand(1,1,112,92)
@@ -157,7 +155,26 @@ pic = pic.reshape(112, 92)
 save_image(pic, './resultsOrl/orig/junk.png') 
 
 plt.plot(losses[100:])
-plt.show()
+plt.savefig('lossPlot.png')
+
+
+for img, _ in data_loader:              #img is now a batch
+    img = img[:,0]
+    img = img.reshape(40, 1, 112, 92)
+    img = img.view(img.size(0), -1)
+    img = img.cpu()
+    # ============= forward ============
+    output = model(img, store)
+    # ============ backward ============
+    pic =output.cpu().data
+    for i, p in enumerate(pic):
+        p = p.reshape(112, 92)
+        save_image(p, './resultsOrl/post/decode' +str(i) + '.png')   
+    break
+
+
+
+
 
 sys.exit()
 
