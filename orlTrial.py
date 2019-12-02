@@ -151,7 +151,7 @@ garb = garb.view(garb.size(0), -1)
 garb = model(garb, [])
 pic = garb.cpu().data
 pic = pic.reshape(112, 92)
-save_image(pic, './resultsOrl/orig/junk.png') 
+#save_image(pic, './resultsOrl/orig/junk.png') 
 
 plt.plot(losses[900:])
 plt.savefig('./lossPlot.png')
