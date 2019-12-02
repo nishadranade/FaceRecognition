@@ -94,14 +94,13 @@ class autoencoder(nn.Module):
 model = autoencoder().cpu()
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
-    model.parameters(), lr = 1e-5, weight_decay=0)
+    model.parameters(), lr = 2e-5, weight_decay=0)
 
 
 # store = []
 losses = []
 
 for e in range(1500):
-    #i = 0
     store = []
     for img, _ in data_loader:              #img is now a batch
         img = img[:,0]
@@ -154,8 +153,8 @@ pic = garb.cpu().data
 pic = pic.reshape(112, 92)
 save_image(pic, './resultsOrl/orig/junk.png') 
 
-plt.plot(losses[100:])
-plt.savefig('lossPlot.png')
+plt.plot(losses[900:])
+plt.savefig('./lossPlot.png')
 
 
 for img, _ in data_loader:              #img is now a batch
