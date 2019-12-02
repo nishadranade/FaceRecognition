@@ -94,13 +94,14 @@ class autoencoder(nn.Module):
 model = autoencoder().cpu()
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(
-    model.parameters(), lr = 1e-4, weight_decay=0)
+    model.parameters(), lr = 1e-5, weight_decay=0)
 
 
 # store = []
-for e in range(100):
+losses = []
+
+for e in range(1000):
     #i = 0
-    #losses = []
     store = []
     for img, _ in data_loader:              #img is now a batch
         img = img[:,0]
@@ -110,12 +111,12 @@ for e in range(100):
         img = img.view(img.size(0), -1)
         print(img.size())
         img = img.cpu()
-        # ===== forward ==========
+        # ============= forward ============
         output = model(img, store)
         loss = criterion(output, img)
         print(loss)
-        # print('loss =' + str(loss.item()))
-        # ===== backward =========
+        losses.append(loss.item())
+        # ============ backward ============
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -137,6 +138,7 @@ for e in range(100):
 #torch.save(model.state_dict(), './trial_autoenc.pth')
 
 # ********************** new block ***************
+
 for img, _ in data_loader:
     img = img[:, 0]
     for i, p in enumerate(img):
@@ -146,12 +148,16 @@ for img, _ in data_loader:
 
 
 
+
 garb = torch.rand(1,1,112,92)
 garb = garb.view(garb.size(0), -1)
 garb = model(garb, [])
 pic = garb.cpu().data
 pic = pic.reshape(112, 92)
 save_image(pic, './resultsOrl/orig/junk.png') 
+
+plt.plot(losses[100:])
+plt.show()
 
 sys.exit()
 
