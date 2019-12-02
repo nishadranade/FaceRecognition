@@ -173,8 +173,7 @@ for img, _ in data_loader:              #img is now a batch
     break
 
 
-
-
+torch.save(model.state_dict(), './model1Batch.pt')
 
 sys.exit()
 
