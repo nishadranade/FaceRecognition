@@ -64,7 +64,7 @@ def load_dataset(t):
     )
     return train_loader
 
-data_loader = load_dataset('train')
+data_loader = load_dataset('test')
 
 input = None
 output = None
