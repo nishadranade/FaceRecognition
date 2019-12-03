@@ -46,6 +46,7 @@ class autoencoder(nn.Module):
 
 model = autoencoder().cpu()
 
+# load pretrained model
 model = (torch.load('./model1.pt'))
 
 
@@ -76,6 +77,7 @@ data_loader = load_dataset('train')
 encodings = []
 targets = None
 
+# get encodings of training images to use for training classifier
 for img, labels in data_loader:
     img = img[:, 0]
     img = img.reshape(320, 1, 112, 92)
@@ -86,14 +88,14 @@ for img, labels in data_loader:
     targets = labels
 
 print(encodings[0].size())
-# encodings = encodings[0]
 
+# multi class softmax classifier
 class classifier(nn.Module):
     def __init__(self):
         super(classifier, self).__init__()
         self.net = nn.Sequential(
-            nn.Linear(112*92, 1500),
-            nn.ReLU(),
+            # nn.Linear(112*92, 1500),
+            # nn.ReLU(),
             nn.Linear(1500, 900),
             nn.ReLU(),
             nn.Linear(900, 500),
@@ -112,19 +114,17 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(
     classifier.parameters(), lr = 4e-4, weight_decay = 0)
 
-# print(targets)
 
-# sys.exit()
-
-for e in range(10):
-    for img, target in data_loader:
-        img = img[:, 0]
+# use the encodings of training data to train classifier 
+for e in range(100):
+    for img in encodings:
+        #img = img[:, 0]
         # img = img.reshape(320, 1500)
         img = img.view(img.size(0), -1)
         img = img.cpu()
         # ============= forward ============
         output = classifier(img)
-        loss = criterion(output, target)
+        loss = criterion(output, targets)
         print(loss)
         # ============= backward ===========
         optimizer.zero_grad()
@@ -133,11 +133,27 @@ for e in range(10):
         print('*************')
     print('Epoch number: ' + str(e))
 
+
+# torch.save(classifier, './classifier.pt')
+
+# get test data
 test_data = load_dataset('test')
 
-trgt = None
+# obtain the encodings for the test data by running it through the autoencoder
+test_targets = None
+test_encodings = []
+
 for img, t in test_data:
     img = img[:, 0]
+    img = img.view(img.size(0), -1)
+    img = img.cpu()
+    # ========== forward ============
+    output = model(img, test_encodings)
+    test_targets = t
+
+
+# run the test data encodings through the classifier
+for img in test_encodings:
     img = img.view(img.size(0), -1)
     img = img.cpu()
     # ================ forward =============
@@ -145,11 +161,10 @@ for img, t in test_data:
     print(output.size())
     _, pred = output.max(1)
     print(pred.size())
-    trgt = t
 
 count = 0
 for i in range(80):
-    if pred[i] == trgt[i]:
+    if pred[i] == test_targets[i]:
         count += 1
     
 print(count/80)
