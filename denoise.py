@@ -91,4 +91,4 @@ inp = input.data
 print(inp.size())
 for i, p in enumerate(inp):
     p = p.reshape(112, 92)
-    save_image(inp, './denoise/i' + str(i) + '.png')
+    save_image(p, './denoise/i' + str(i) + '.png')
