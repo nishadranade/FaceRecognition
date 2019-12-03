@@ -47,7 +47,7 @@ class autoencoder(nn.Module):
 model = autoencoder().cpu()
 
 # load pretrained model
-model = (torch.load('./modelOld.pt'))
+model = (torch.load('./model1.pt'))
 
 # get a couple testing samples, with shuffle true
 def load_dataset(t):
@@ -88,6 +88,7 @@ for i, p in enumerate(pic):
     save_image(p, './denoise/d' + str(i) + '.png')
 
 inp = input.data
+print(inp.size())
 for i, p in enumerate(inp):
-    inp = inp.reshape(112, 92)
+    p = p.reshape(112, 92)
     save_image(inp, './denoise/i' + str(i) + '.png')
