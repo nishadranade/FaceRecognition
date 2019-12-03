@@ -66,6 +66,7 @@ def load_dataset(t):
 
 data_loader = load_dataset('train')
 
+input = None
 output = None
 for img, _ in data_loader:
     img = img[:, 0]
@@ -78,6 +79,7 @@ for img, _ in data_loader:
     img = img * noise
     # ======= forward =========
     output = model(img, [])
+    input = img
     break
 
 pic = output.data
@@ -85,3 +87,7 @@ for i, p in enumerate(pic):
     p = p.reshape(112, 92)
     save_image(p, './denoise/d' + str(i) + '.png')
 
+inp = input.data
+for i, p in enumerate(inp):
+    inp = inp.reshape(112, 92)
+    save_image(inp, './denoise/i' + str(i) + '.png')
