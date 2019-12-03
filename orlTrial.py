@@ -99,7 +99,9 @@ optimizer = torch.optim.Adam(
 
 losses = []
 
-for e in range(2000):
+picE = None
+
+for e in range(200):
     store = []
     lossE = 0
     for img, _ in data_loader:              #img is now a batch
@@ -122,14 +124,18 @@ for e in range(2000):
         #i += 1
         # print(i)
         pic =output.cpu().data
-        # print("output size= " + str(pic.size()))
         print(pic.size())
-        for i, p in enumerate(pic):
-            p = p.reshape(112, 92)
-            save_image(p, './resultsOrl/pre/decode' +str(i) + '.png')   
+        picE = pic
+        # print("output size= " + str(pic.size()))  
         print('********************')
     losses.append(lossE)
     print('Epoch number: ' + str(e))
+
+
+for i, p in enumerate(picE):
+    p = p.reshape(112, 92)
+    save_image(p, './resultsOrl/pre/decode' +str(i) + '.png') 
+
 
 # i = 0
 #torch.save(model.state_dict(), './trial_autoenc.pth')
