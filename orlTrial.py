@@ -18,7 +18,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 def load_dataset():
-    data_path = 'orlFaces/'
+    data_path = 'orlFaces/train/'
     train_dataset = datasets.ImageFolder(
         root=data_path,
         transform=transforms.ToTensor()
@@ -97,11 +97,11 @@ optimizer = torch.optim.Adam(
     model.parameters(), lr = 2e-5, weight_decay=0)
 
 
-# store = []
 losses = []
 
 for e in range(1500):
     store = []
+    lossE = 0
     for img, _ in data_loader:              #img is now a batch
         img = img[:,0]
         print(img.size())
@@ -114,7 +114,7 @@ for e in range(1500):
         output = model(img, store)
         loss = criterion(output, img)
         print(loss)
-        losses.append(loss.item())
+        lossE = loss
         # ============ backward ============
         optimizer.zero_grad()
         loss.backward()
@@ -127,11 +127,9 @@ for e in range(1500):
         for i, p in enumerate(pic):
             p = p.reshape(112, 92)
             save_image(p, './resultsOrl/pre/decode' +str(i) + '.png')   
-        break
-    # losses = np.array(losses)
-    print('********************')
-    # print('epoch number =' + str(e))
-    # print('avg loss is = ' + str(np.mean(losses)))    
+        print('********************')
+    losses.append(lossE)
+    print('Epoch number: ' + str(e))
 
 # i = 0
 #torch.save(model.state_dict(), './trial_autoenc.pth')
@@ -172,7 +170,7 @@ for img, _ in data_loader:              #img is now a batch
     break
 
 
-torch.save(model.state_dict(), './model1Batch.pt')
+torch.save(model, './model1.pt')
 
 sys.exit()
 
