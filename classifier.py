@@ -47,7 +47,7 @@ class autoencoder(nn.Module):
 model = autoencoder().cpu()
 
 # load pretrained model
-model = (torch.load('./model1.pt'))
+model = torch.load('./model1.pt')
 
 
 # l = []
