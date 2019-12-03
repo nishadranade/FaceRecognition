@@ -47,7 +47,7 @@ class autoencoder(nn.Module):
 model = autoencoder().cpu()
 
 # load pretrained model
-model = (torch.load('./modelOld.pt'))
+model = (torch.load('./model1.pt'))
 
 # get a couple testing samples, with shuffle true
 def load_dataset(t):

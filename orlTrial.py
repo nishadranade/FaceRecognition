@@ -101,7 +101,7 @@ losses = []
 
 picE = None
 
-for e in range(200):
+for e in range(2000):
     store = []
     lossE = 0
     for img, _ in data_loader:              #img is now a batch
