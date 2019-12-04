@@ -116,6 +116,7 @@ optimizer = torch.optim.Adam(
 
 
 # use the encodings of training data to train classifier 
+losses = []
 for e in range(100):
     for img in encodings:
         #img = img[:, 0]
@@ -126,6 +127,7 @@ for e in range(100):
         output = classifier(img)
         loss = criterion(output, targets)
         print(loss)
+        losses.append(loss)
         # ============= backward ===========
         optimizer.zero_grad()
         loss.backward(retain_graph=True)
@@ -133,6 +135,9 @@ for e in range(100):
         print('*************')
     print('Epoch number: ' + str(e))
 
+
+plt.plot(losses[40:])
+plt.savefig('./classifierLoss.png')
 
 # torch.save(classifier, './classifier.pt')
 

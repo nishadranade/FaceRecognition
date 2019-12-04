@@ -46,11 +46,11 @@ class autoencoder(nn.Module):
             nn.Linear(4000, 2500, bias=True),
             nn.ReLU(True), 
             nn.Linear(2500, 1500, bias=True))
-            # nn.ReLU(True)) 
-            # nn.Linear(200, 50, bias=False))
+            nn.ReLU(True)) 
+            nn.Linear(1500, 500, bias=False))
         self.decoder = nn.Sequential(
-            # nn.Linear(50, 200, bias=False),
-            # nn.ReLU(True),
+            nn.Linear(500, 1500, bias=False),
+            nn.ReLU(True),
             nn.Linear(1500, 2500, bias=True),
             nn.ReLU(True),
             nn.Linear(2500, 4000, bias=True),
