@@ -96,13 +96,11 @@ class classifier(nn.Module):
         self.net = nn.Sequential(
             # nn.Linear(112*92, 1500),
             # nn.ReLU(),
-            nn.Linear(1500, 900),
+            nn.Linear(500, 300),
             nn.ReLU(),
-            nn.Linear(900, 500),
+            nn.Linear(300, 200),
             nn.ReLU(),
             nn.Dropout(p=0.3),
-            nn.Linear(500, 200),
-            nn.ReLU(),
             nn.Linear(200, 40)
         )  
     def forward(self, x):
